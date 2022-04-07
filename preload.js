@@ -18,3 +18,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 contextBridge.exposeInMainWorld('electronAPI2',{
     openFile: () => ipcRenderer.invoke('dialog:openFile')
 })
+
+contextBridge.exposeInMainWorld('electronAPI3', {
+    handleCounter: (callback) => ipcRenderer.on('update-counter', callback)
+})

@@ -1,5 +1,5 @@
 const path = require('path')
-const {app, BrowserWindow, ipcMain, dialog} = require('electron')
+const {app, BrowserWindow, ipcMain, dialog, Menu} = require('electron')
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -16,9 +16,28 @@ const createWindow = () => {
         win.setTitle(title)
     })
 
+    const menu = Menu.buildFromTemplate([
+        {
+            label: app.name,
+            submenu: [
+                {
+                    click: () => win.webContents.send('update-counter', 1),
+                    label: 'Increment',
+                },
+                {
+                    click: () => win.webContents.send('update-counter', -1),
+                    label: 'Decrement',
+                }
+            ]
+        }
 
+    ])
+
+    Menu.setApplicationMenu(menu)
     win.loadFile("index.html")
     // win.loadURL("http://www.baidu.com")
+
+    win.webContents.openDevTools()
 }
 
 async function handleFileOpen() {
@@ -31,6 +50,10 @@ async function handleFileOpen() {
 }
 
 app.whenReady().then(() => {
+
+    ipcMain.on('counter-value', (_event, value) => {
+        console.log(value) // will print value to Node console
+    })
 
     ipcMain.handle('dialog:openFile', handleFileOpen)
 
