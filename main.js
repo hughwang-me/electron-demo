@@ -1,5 +1,5 @@
 const path = require('path')
-const { app, BrowserWindow } = require('electron')
+const {app, BrowserWindow, ipcMain, dialog} = require('electron')
 
 const createWindow = () => {
     const win = new BrowserWindow({
@@ -10,10 +10,30 @@ const createWindow = () => {
         }
     })
 
-    win.loadFile('index.html')
+    ipcMain.on('set-title', (event, title) => {
+        const webContents = event.sender
+        const win = BrowserWindow.fromWebContents(webContents)
+        win.setTitle(title)
+    })
+
+
+    win.loadFile("index.html")
+    // win.loadURL("http://www.baidu.com")
+}
+
+async function handleFileOpen() {
+    const { canceled, filePaths } = await dialog.showOpenDialog()
+    if (canceled) {
+        return
+    } else {
+        return filePaths[0]
+    }
 }
 
 app.whenReady().then(() => {
+
+    ipcMain.handle('dialog:openFile', handleFileOpen)
+
     createWindow()
 
     app.on('activate', () => {
