@@ -15,6 +15,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
 })
 
 
-contextBridge.exposeInMainWorld('electronAPI',{
+contextBridge.exposeInMainWorld('electronAPI2',{
     openFile: () => ipcRenderer.invoke('dialog:openFile')
 })

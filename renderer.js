@@ -10,7 +10,7 @@ const openFileButton = document.getElementById('btnOpenFile')
 const filePathElement = document.getElementById('filePath')
 
 openFileButton.addEventListener('click', async () => {
-    const filePath = await window.electronAPI.openFile()
+    const filePath = await window.electronAPI2.openFile()
     filePathElement.innerText = filePath
 })
 
